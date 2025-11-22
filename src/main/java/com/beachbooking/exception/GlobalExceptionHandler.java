@@ -1,6 +1,7 @@
 package com.beachbooking.exception;
 
 import com.beachbooking.model.dto.response.ErrorResponse;
+import com.beachbooking.model.dto.response.ValidationErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler {
      * Gestisce errori di validazione (@Valid).
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(
+    public ResponseEntity<ValidationErrorResponse> handleValidationExceptions(
             MethodArgumentNotValidException ex,
             WebRequest request) {
 
@@ -37,9 +38,17 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
+        ValidationErrorResponse errorResponse = ValidationErrorResponse.of(
+                HttpStatus.BAD_REQUEST.value(),
+                "Validation Failed",
+                "Errore di validazione dei campi",
+                request.getDescription(false).replace("uri=", ""),
+                errors
+        );
+
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(errors);
+                .body(errorResponse);
     }
 
     /**
@@ -190,34 +199,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(errorResponse);
-    }
-}
-
-// ============= Custom Exceptions =============
-
-// ResourceNotFoundException.java
-package com.beachbooking.exception;
-
-public class ResourceNotFoundException extends RuntimeException {
-    public ResourceNotFoundException(String message) {
-        super(message);
-    }
-}
-
-// TenantNotFoundException.java
-package com.beachbooking.exception;
-
-public class TenantNotFoundException extends RuntimeException {
-    public TenantNotFoundException(String message) {
-        super(message);
-    }
-}
-
-// UnauthorizedException.java
-package com.beachbooking.exception;
-
-public class UnauthorizedException extends RuntimeException {
-    public UnauthorizedException(String message) {
-        super(message);
     }
 }
