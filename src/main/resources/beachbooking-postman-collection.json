@@ -1,0 +1,368 @@
+{
+  "info": {
+    "name": "Beach Booking API",
+    "_postman_id": "beach-booking-api",
+    "description": "API per gestione prenotazioni ombrelloni",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "tenantId",
+      "value": "11111111-1111-1111-1111-111111111111",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login Admin Lido Marechiaro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set('token', jsonData.token);",
+                  "    pm.collectionVariables.set('tenantId', jsonData.user.tenantId);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@lidomarechiaro.it\",\n  \"password\": \"Admin123!\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Register Tenant",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nomeStabilimento\": \"Nuovo Lido Test\",\n  \"email\": \"test@nuovolido.it\",\n  \"password\": \"Password123!\",\n  \"nomeAdmin\": \"Mario\",\n  \"cognomeAdmin\": \"Test\",\n  \"telefono\": \"3331234567\",\n  \"indirizzo\": \"Via Test, 1\",\n  \"citta\": \"Napoli\",\n  \"provincia\": \"NA\",\n  \"cap\": \"80100\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register/tenant",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register", "tenant"]
+            }
+          }
+        },
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Tenant-ID",
+                "value": "{{tenantId}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"cliente@test.it\",\n  \"password\": \"Password123!\",\n  \"nome\": \"Giovanni\",\n  \"cognome\": \"Cliente\",\n  \"telefono\": \"3339876543\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/register/customer",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "register", "customer"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "me"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Tenants",
+      "item": [
+        {
+          "name": "Get Current Tenant",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/tenants/current",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tenants", "current"]
+            }
+          }
+        },
+        {
+          "name": "Check Slug Available",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/tenants/check-slug/test-lido",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "tenants", "check-slug", "test-lido"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ombrelloni",
+      "item": [
+        {
+          "name": "Create Ombrellone",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"numero\": 51,\n  \"fila\": \"D\",\n  \"tipo\": \"PREMIUM\",\n  \"descrizione\": \"Ombrellone test\",\n  \"posizioneX\": 100,\n  \"posizioneY\": 350\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/ombrelloni",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ombrelloni"]
+            }
+          }
+        },
+        {
+          "name": "Get All Ombrelloni",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ombrelloni",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ombrelloni"]
+            }
+          }
+        },
+        {
+          "name": "Get Active Ombrelloni",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ombrelloni/active",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ombrelloni", "active"]
+            }
+          }
+        },
+        {
+          "name": "Get Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/ombrelloni/stats/count",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "ombrelloni", "stats", "count"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Prenotazioni",
+      "item": [
+        {
+          "name": "Create Prenotazione",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"ombrelloneId\": \"inserisci-uuid-ombrellone\",\n  \"dataInizio\": \"2025-07-01\",\n  \"dataFine\": \"2025-07-07\",\n  \"tipoPrenotazione\": \"SETTIMANALE\",\n  \"note\": \"Prima fila se possibile\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/prenotazioni",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prenotazioni"]
+            }
+          }
+        },
+        {
+          "name": "Get My Prenotazioni",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/prenotazioni/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prenotazioni", "me"]
+            }
+          }
+        },
+        {
+          "name": "Get Disponibili",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/prenotazioni/disponibili?dataInizio=2025-07-01&dataFine=2025-07-07",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prenotazioni", "disponibili"],
+              "query": [
+                {
+                  "key": "dataInizio",
+                  "value": "2025-07-01"
+                },
+                {
+                  "key": "dataFine",
+                  "value": "2025-07-07"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Confirm Prenotazione",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/prenotazioni/{{prenotazioneId}}/confirm",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prenotazioni", "{{prenotazioneId}}", "confirm"]
+            }
+          }
+        },
+        {
+          "name": "Get Stats",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/prenotazioni/stats",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "prenotazioni", "stats"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
