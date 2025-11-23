@@ -1,3 +1,6 @@
+-- COMANDO DI AVVIO pg_ctl -D "C:\postgresql-18.1-1-windows-x64-binaries\data" start
+
+
 -- ============================================
 -- BEACH BOOKING - DATABASE INITIALIZATION
 -- ============================================

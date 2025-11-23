@@ -1,11 +1,16 @@
 package com.beachbooking.model.enums;
 
-/**
- * Ruoli utente dell'applicazione.
- */
 public enum RuoloUtente {
-    TENANT_ADMIN,
-    TENANT_USER,
-    CUSTOMER,
-    SYSTEM_ADMIN
+    SUPER_ADMIN("Amministratore piattaforma"),
+    TENANT_ADMIN("Proprietario stabilimento"),
+    STAFF("Staff stabilimento"),
+    CUSTOMER("Cliente");
+
+    private final String descrizione;
+
+    RuoloUtente(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
+    public String getDescrizione() { return descrizione; }
 }

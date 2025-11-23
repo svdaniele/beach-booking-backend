@@ -352,15 +352,15 @@ public class PrenotazioneController {
     @PreAuthorize("hasAnyRole('TENANT_ADMIN', 'STAFF', 'SUPER_ADMIN')")
     public ResponseEntity<StatsResponse> getStatistics() {
         long pending = prenotazioneService.countByStato(StatoPrenotazione.PENDING);
-        long confirmed = prenotazioneService.countByStato(StatoPrenotazione.CONFIRMED);
-        long paid = prenotazioneService.countByStato(StatoPrenotazione.PAID);
-        long completed = prenotazioneService.countByStato(StatoPrenotazione.COMPLETED);
         long cancelled = prenotazioneService.countByStato(StatoPrenotazione.CANCELLED);
+        long paid = prenotazioneService.countByStato(StatoPrenotazione.PAID);
+        long refunded = prenotazioneService.countByStato(StatoPrenotazione.REFUNDED);
+        long failed = prenotazioneService.countByStato(StatoPrenotazione.FAILED);
 
         java.math.BigDecimal totalRevenue = prenotazioneService.getTotalRevenue();
 
         StatsResponse stats = new StatsResponse(
-                pending, confirmed, paid, completed, cancelled, totalRevenue
+                pending, cancelled, paid, refunded, failed, totalRevenue
         );
 
         return ResponseEntity.ok(stats);
@@ -397,7 +397,7 @@ public class PrenotazioneController {
                 .tipoPrenotazione(prenotazione.getTipoPrenotazione().name())
                 .prezzoTotale(prenotazione.getPrezzoTotale())
                 .stato(prenotazione.getStato().name())
-                .statoDescrizione(prenotazione.getStato().getDescrizione())
+                //.statoDescrizione(prenotazione.getStato().getDescrizione())
                 .note(prenotazione.getNote())
                 .codicePrenotazione(prenotazione.getCodicePrenotazione())
                 .dataCreazione(prenotazione.getDataCreazione())
@@ -410,7 +410,7 @@ public class PrenotazioneController {
                 .numero(o.getNumero())
                 .fila(o.getFila())
                 .tipo(o.getTipo().name())
-                .tipoDescrizione(o.getTipo().getDescrizione())
+                //.tipoDescrizione(o.getTipo().getDescrizione())
                 .descrizione(o.getDescrizione())
                 .posizioneX(o.getPosizioneX())
                 .posizioneY(o.getPosizioneY())
