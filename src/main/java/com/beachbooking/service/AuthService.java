@@ -41,27 +41,41 @@ public class AuthService {
      * Restituisce un JWT token.
      */
     public String login(String email, String password) {
-        // Autentica l'utente
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
+        System.out.println("=== AuthService.login() ===");
+        System.out.println("Email: " + email);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password)
+            );
+            System.out.println("Authentication SUCCESS");
 
-        // Trova l'utente per ottenere tenantId e ruolo
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Aggiorna ultimo accesso
-        user.setUltimoAccesso(LocalDateTime.now());
-        userRepository.save(user);
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Genera token con claims custom
-        return jwtTokenProvider.generateTokenWithClaims(
-                email,
-                user.getTenantId(),
-                user.getRuolo().name()
-        );
+            System.out.println("User found: " + user.getEmail());
+
+            user.setUltimoAccesso(LocalDateTime.now());
+            userRepository.save(user);
+
+            String token = jwtTokenProvider.generateTokenWithClaims(
+                    email,
+                    user.getTenantId(),
+                    user.getRuolo().name()
+            );
+
+            System.out.println("Token generated: " + token.substring(0, 20) + "...");
+
+            return token;
+
+        } catch (Exception e) {
+            System.out.println("Authentication FAILED: " + e.getClass().getName());
+            System.out.println("Message: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     /**

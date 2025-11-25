@@ -50,7 +50,7 @@ CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tenant_id UUID REFERENCES tenants(id) ON DELETE CASCADE,
     email VARCHAR(150) NOT NULL,
-    password VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL CHECK (password LIKE '{bcrypt}%'),
     nome VARCHAR(100) NOT NULL,
     cognome VARCHAR(100) NOT NULL,
     telefono VARCHAR(20),

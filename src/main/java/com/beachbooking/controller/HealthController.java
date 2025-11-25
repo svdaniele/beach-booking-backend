@@ -1,0 +1,12 @@
+package com.beachbooking.controller;
+
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+public class HealthController {
+
+    @GetMapping("/health")
+    public String health() {
+        return "OK";
+    }
+}

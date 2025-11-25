@@ -35,19 +35,25 @@ public class SecurityConfig {
     /**
      * Password encoder BCrypt.
      */
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     /**
      * Authentication provider.
      */
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider(
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-//        authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setPasswordEncoder(passwordEncoder);
+        authProvider.setPasswordEncoder(
+                org.springframework.security.crypto.factory.PasswordEncoderFactories
+                        .createDelegatingPasswordEncoder()
+        );
         return authProvider;
     }
 
@@ -83,6 +89,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/public/**",
+                                "/api/debug/**",
                                 "/api/tenants/register",
                                 "/api/tenants/check-slug/**",
                                 "/health",
@@ -113,7 +120,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
 
                 // Configura l'authentication provider
-                .authenticationProvider(authenticationProvider());
+                .authenticationProvider(authenticationProvider(userDetailsService, passwordEncoder()));
 
         return http.build();
     }
