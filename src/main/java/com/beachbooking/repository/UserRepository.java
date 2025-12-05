@@ -36,4 +36,6 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     @Query("SELECT COUNT(u) FROM User u WHERE u.tenantId = :tenantId AND u.ruolo = :ruolo")
     long countByTenantIdAndRuolo(@Param("tenantId") UUID tenantId,
                                  @Param("ruolo") RuoloUtente ruolo);
+
+    List<User> findByRuolo(RuoloUtente ruolo);
 }
