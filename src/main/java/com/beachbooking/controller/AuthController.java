@@ -72,6 +72,7 @@ public class AuthController {
 
             AuthResponse response = AuthResponse.builder()
                     .token(token)
+                    .tenantId(user.getTenantId())
                     .type("Bearer")
                     .user(userInfo)
                     .build();

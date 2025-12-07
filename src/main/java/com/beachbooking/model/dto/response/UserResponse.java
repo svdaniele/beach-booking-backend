@@ -1,5 +1,6 @@
 package com.beachbooking.model.dto.response;
 
+import com.beachbooking.model.entity.User;
 import com.beachbooking.model.enums.RuoloUtente;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,4 +32,8 @@ public class UserResponse {
     private UUID tenantId;
     private LocalDateTime dataRegistrazione;
     private LocalDateTime ultimoAccesso;
+
+    public static UserResponse fromEntity(User user) {
+        return null;
+    }
 }

@@ -75,4 +75,9 @@ public class User {
     public String getNomeCompleto() {
         return nome + " " + cognome;
     }
+
+    private String avatarUrl;
+
+    public void setCodiceFiscale(String codiceFiscale) {
+    }
 }

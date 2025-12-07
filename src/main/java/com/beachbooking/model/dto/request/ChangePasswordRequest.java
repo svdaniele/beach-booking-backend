@@ -24,4 +24,8 @@ public class ChangePasswordRequest {
 
     @NotBlank(message = "Conferma password è obbligatoria")
     private String confirmPassword;
+
+    public String getCurrentPassword() {
+        return "";
+    }
 }
