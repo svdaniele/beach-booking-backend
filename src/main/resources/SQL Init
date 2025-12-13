@@ -399,3 +399,19 @@ UNION ALL
 SELECT
     'Bagni Napoli Admin' as info,
     'admin@bagninapoli.it / Admin123!' as separator;
+
+
+-- ADMIN
+INSERT INTO users (id, tenant_id, email, password, nome, cognome, telefono, ruolo, attivo, email_verificata)
+VALUES (
+    '00000000-0000-0000-0000-000000000001',
+    NULL,
+    'superadmin@beachbooking.it',
+    '$2a$10$N9qo8uLOickgx2ZMRZoMye7tR.qP5VN3.IZn5oIBVlRkjNSO5LgHy',
+    'Super',
+    'Admin',
+    '3331111111',
+    'SUPER_ADMIN',
+    TRUE,
+    TRUE
+);
